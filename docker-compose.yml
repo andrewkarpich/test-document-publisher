@@ -1,0 +1,22 @@
+version: '2'
+services:
+  backend:
+      container_name: d_backend
+      build:
+          dockerfile: Dockerfile
+          context: ./backend
+      ports:
+          - 8080:8080
+      volumes:
+          - ./backend/:/var/www
+  postgres:
+      container_name: d_postgres
+      image: postgres:11.2
+      volumes:
+          - postgresvolume:/var/lib/postgresql/data
+      environment:
+          - POSTGRES_DB=test
+          - POSTGRES_USER=test
+          - POSTGRES_PASSWORD=sRZeJuJjR2uy8CX4
+volumes:
+    postgresvolume:

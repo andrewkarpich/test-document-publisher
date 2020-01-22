@@ -1,0 +1,20 @@
+{
+  "name": "test-document-publisher/test-document-publisher",
+  "description": "test-document-publisher",
+  "minimum-stability": "dev",
+  "type": "project",
+  "require": {
+    "robmorgan/phinx": "^0.11.4",
+    "php-ds/php-ds": "^v1.2.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master",
+    "phalcon/ide-stubs": "v4.0.0",
+    "swoole/ide-helper": "4.4.13"
+  },
+  "autoload": {
+    "psr-4": {
+      "Backend\\": "src/"
+    }
+  }
+}
