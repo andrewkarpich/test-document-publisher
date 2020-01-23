@@ -9,7 +9,9 @@ use Backend\Domain\Repositories\Exceptions\CanNotCreateException;
 use Backend\Domain\Repositories\Exceptions\CanNotUpdateException;
 use Backend\Domain\Repositories\Exceptions\NotFoundException;
 use Backend\Models\Document;
+use Backend\Validators\UuidValidator;
 use Phalcon\Mvc\Model\Resultset\Simple;
+use Phalcon\Validation;
 
 class DocumentModelRepository extends Repository implements DocumentRepositoryInterface
 {
@@ -56,6 +58,14 @@ class DocumentModelRepository extends Repository implements DocumentRepositoryIn
 
     public function findById(string $id): DocumentEntity
     {
+
+        $validation = new Validation();
+
+        $validation->add('id', new UuidValidator());
+
+        if (count($validation->validate(['id' => $id])) > 0) {
+            throw new NotFoundException();
+        }
 
         $document = Document::findFirst([
             'id = :id:',

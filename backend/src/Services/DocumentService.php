@@ -12,6 +12,7 @@ use Backend\Domain\Services\DocumentServiceInterface;
 use Backend\Domain\Services\Exceptions\AlreadyPublishedException;
 use Backend\Models\Document;
 use Backend\Models\Enums\DocumentStatus;
+use Phalcon\Helper\Json;
 
 class DocumentService extends Service implements DocumentServiceInterface
 {
@@ -90,11 +91,16 @@ class DocumentService extends Service implements DocumentServiceInterface
 
     protected function mergePayload(object $payload, object $newPayload): object
     {
-        $merged = array_replace_recursive((array)$payload, (array)$newPayload);
+        // Fast casting object -> array
+        $merged = array_replace_recursive(
+            Json::decode(Json::encode($payload),true),
+            Json::decode(Json::encode($newPayload),true)
+        );
 
         $merged = $this->clearNulls($merged);
 
-        return (object)$merged;
+        // Fast casting array -> object
+        return Json::decode(Json::encode($merged));
     }
 
     protected function clearNulls($array): array

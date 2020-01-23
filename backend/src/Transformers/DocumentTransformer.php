@@ -10,7 +10,6 @@ class DocumentTransformer extends TransformerAbstract
 {
     public function transform(DocumentEntity $entity): array
     {
-
         return [
             'id'       => $entity->getId(),
             'status'   => $entity->getStatus()->getValue(),

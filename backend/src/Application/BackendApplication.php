@@ -13,6 +13,7 @@ use Phalcon\Mvc\Micro;
 use Phalcon\Mvc\Model\Manager;
 use Phalcon\Mvc\Model\MetaData\Memory;
 use Phalcon\Mvc\Router;
+use Phalcon\Security;
 
 /**
  * Class BackendApplication
@@ -47,6 +48,7 @@ class BackendApplication extends Micro
         $this->container->set('modelsMetadata', new Memory());
         $this->container->set('eventsManager', new \Phalcon\Events\Manager());
         $this->container->set('filter', (new FilterFactory())->newInstance());
+        $this->container->set('security', new Security());
 
         $this->container->register(new DatabaseServiceProvider());
         $this->container->register(new CryptServiceProvider());

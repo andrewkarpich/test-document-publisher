@@ -21,6 +21,8 @@ class JsonResponse extends Response
 
         parent::__construct($content, $code, $status);
 
+        $this->setHeader('Content-Type', 'application/json');
+
         $content = $this->getContent();
 
         if ($content) {

@@ -9,12 +9,17 @@
     "jan-swiecki/simple-annotations": "0.3.1",
     "nesbot/carbon": "^2.16.1",
     "league/fractal": "^0.13.0@dev",
-    "myclabs/php-enum": "dev-master"
+    "myclabs/php-enum": "dev-master",
+    "ext-json": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",
     "phalcon/ide-stubs": "v4.0.0",
-    "swoole/ide-helper": "4.4.13"
+    "swoole/ide-helper": "4.4.13",
+    "codeception/codeception": "4.0.x-dev",
+    "codeception/module-phpbrowser": "^1.0.0",
+    "codeception/module-asserts": "^1.0.0",
+    "codeception/module-rest": "^1.0.0"
   },
   "autoload": {
     "psr-4": {

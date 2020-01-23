@@ -63,6 +63,10 @@ class SwoolePhalconServer extends Server
 
             $response->status($result->getStatusCode(), $result->getReasonPhrase());
 
+            foreach ($result->getHeaders()->toArray() as $headerName => $header) {
+                $response->setHeader($headerName, $header);
+            }
+
             $content = $result->getContent();
 
             if ($content) {

@@ -9,6 +9,7 @@ use Backend\Models\Behaviors\CarbonTimestampable;
 use Backend\Models\Enums\DocumentStatus;
 use Carbon\Carbon;
 use MyCLabs\Enum\Enum;
+use Phalcon\Helper\Json;
 use Phalcon\Mvc\Model;
 
 class Document extends Model implements DocumentEntity
@@ -24,7 +25,7 @@ class Document extends Model implements DocumentEntity
         $this->addBehavior(new BeforeAfterSave([
             'after'  => [
                 'payload' => function ($value) {
-                    return is_string($value) ? json_decode($value) : $value;
+                    return is_string($value) ? Json::decode($value) : $value;
                 },
                 'status'  => function ($value) {
                     return is_string($value) ? new DocumentStatus($value) : $value;
@@ -32,12 +33,9 @@ class Document extends Model implements DocumentEntity
             ],
             'before' => [
                 'payload' => function ($value) {
-                    return is_object($value) ? json_encode($value) : $value;
+                    return is_object($value) ? Json::encode($value) : $value;
                 },
                 'status'  => function ($value) {
-                    /**
-                     * @var DocumentStatus $value
-                     */
                     return is_object($value) ? $value->getValue() : $value;
                 }
             ]
