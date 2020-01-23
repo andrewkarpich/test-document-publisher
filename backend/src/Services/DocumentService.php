@@ -91,33 +91,46 @@ class DocumentService extends Service implements DocumentServiceInterface
 
     protected function mergePayload(object $payload, object $newPayload): object
     {
-        // Fast casting object -> array
-        $merged = array_replace_recursive(
-            Json::decode(Json::encode($payload),true),
-            Json::decode(Json::encode($newPayload),true)
-        );
-
-        $merged = $this->clearNulls($merged);
-
-        // Fast casting array -> object
-        return Json::decode(Json::encode($merged));
+        return $this->objectReplaceRecursive($payload, $newPayload);
     }
 
-    protected function clearNulls($array): array
+    protected function objectReplaceRecursive(object $object1, object $object2): object
     {
-        foreach ($array as $key => &$value) {
 
-            if (is_array($value)) {
+        foreach ($object2 as $key => $item) {
 
-                $value = $this->clearNulls($value);
+            $value = null;
 
-            } else if ($value === null) {
+            if ($item === null) {
+                unset($object1->{$key});
+                continue;
+            }
 
-                unset($array[$key]);
+            if (is_object($item)) {
+
+                $value = $this->objectReplaceRecursive(
+                    isset($object1->{$key}) && is_object($object1->{$key}) ? $object1->{$key} : new \stdClass(),
+                    $item
+                );
+
+            } else {
+
+                $value = $item;
 
             }
+
+            if ($value === null && property_exists($object1, $key)) {
+
+                unset($object1->{$key});
+
+            } else {
+
+                $object1->{$key} = $value;
+
+            }
+
         }
 
-        return $array;
+        return $object1;
     }
 }
