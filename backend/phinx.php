@@ -2,7 +2,7 @@
 
 use Phalcon\Config;
 
-require __DIR__ . '/src/config/defines.php';
+require __DIR__ . '/src/Config/defines.php';
 
 /**
  * @var Config $config

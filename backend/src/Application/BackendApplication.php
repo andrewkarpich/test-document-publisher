@@ -2,25 +2,32 @@
 
 namespace Backend\Application;
 
+use Backend\Application\Requests\Request;
 use Backend\Application\Services\CryptServiceProvider;
 use Backend\Application\Services\DatabaseServiceProvider;
 use Phalcon\Config;
-use Phalcon\Di\FactoryDefault;
-use Phalcon\Http\Request;
+use Phalcon\Di;
+use Phalcon\Filter\FilterFactory;
+use Phalcon\Http\Response;
 use Phalcon\Mvc\Micro;
+use Phalcon\Mvc\Model\Manager;
+use Phalcon\Mvc\Model\MetaData\Memory;
+use Phalcon\Mvc\Router;
 
+/**
+ * Class BackendApplication
+ * @package Backend\Application
+ * @property Di $container
+ */
 class BackendApplication extends Micro
 {
-
-    /**
-     * @var FactoryDefault
-     */
-    protected $container;
 
     public function __construct(Config $config)
     {
 
-        parent::__construct(new FactoryDefault());
+        Di::reset();
+
+        parent::__construct(new Di());
 
         $this->registerServices($config);
 
@@ -33,7 +40,13 @@ class BackendApplication extends Micro
     {
 
         $this->container->set('config', $config);
-        $this->container->set('request', Request::class);
+        $this->container->set('request', new Request());
+        $this->container->set('response', new Response());
+        $this->container->set('router', new Router());
+        $this->container->set('modelsManager', new Manager());
+        $this->container->set('modelsMetadata', new Memory());
+        $this->container->set('eventsManager', new \Phalcon\Events\Manager());
+        $this->container->set('filter', (new FilterFactory())->newInstance());
 
         $this->container->register(new DatabaseServiceProvider());
         $this->container->register(new CryptServiceProvider());
@@ -73,11 +86,21 @@ class BackendApplication extends Micro
 
     protected function responseHandle()
     {
+        $returnedValue = $this->getReturnedValue();
 
-        $this->response->setContent($this->getReturnedValue());
+        if ($returnedValue instanceof Response) {
+
+            return $returnedValue;
+
+        }
+
+        if ($returnedValue) {
+
+            $this->response->setContent($returnedValue);
+
+        }
 
         return $this->response;
-
     }
 
 }

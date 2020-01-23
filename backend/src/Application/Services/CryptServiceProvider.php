@@ -19,7 +19,7 @@ class CryptServiceProvider implements ServiceProviderInterface
          */
         $config = $di->get('config');
 
-        $di->set('crypt', static function () use ($config) {
+        $di->set('crypt', function () use ($config) {
             $crypt = new Crypt();
 
             $salt = substr($config->apps->cryptSalt, 0, 32);

@@ -19,7 +19,9 @@ class DatabaseServiceProvider implements ServiceProviderInterface
          */
         $config = $di->get('config');
 
-        $di->set('db', static function () use ($config) {
+        $di->set('db', function () use ($di, $config) {
+
+            $eventsManager = $di->get('eventsManager');
 
             $descriptor = [
                 'host'     => $config->database->postgres->host,
@@ -33,7 +35,11 @@ class DatabaseServiceProvider implements ServiceProviderInterface
                 $descriptor['dsn'] = $config->database->postgres->dsn;
             }
 
-            return new Postgresql($descriptor);
+            $connection = new Postgresql($descriptor);
+
+            $connection->setEventsManager($eventsManager);
+
+            return $connection;
 
         });
 

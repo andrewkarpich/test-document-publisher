@@ -2,6 +2,7 @@
 
 namespace Backend\Server;
 
+use Carbon\Carbon;
 use Phalcon\Config;
 use Phalcon\Mvc\Application;
 use Swoole\Http\Request;
@@ -43,28 +44,41 @@ class SwoolePhalconServer extends Server
     public function onRequest(Request $request, Response $response): void
     {
 
-        $this->convertRequest($request);
-
         $uri = $request->server['request_uri'];
 
-        $this->consoleLog('Handle Request: ' . $uri);
+        $this->convertRequest($request);
+
+        $this->consoleLog(Carbon::now()->toDateTimeString() . ' - Handle Request: ' . $uri);
 
         /**
          * @var Application $application
          */
         $application = new $this->mvcApplicationClassName($this->config);
+        $application->getDI()->get('request')->setRawBody($request->rawContent());
+        $application->header = $request->header;
 
         $result = $application->handle($uri);
 
-        $response->status($application->response->getStatusCode(), $application->response->getReasonPhrase());
-
         if ($result instanceof \Phalcon\Http\Response) {
-            $response->end($result->getContent());
+
+            $response->status($result->getStatusCode(), $result->getReasonPhrase());
+
+            $content = $result->getContent();
+
+            if ($content) {
+                $response->end($content);
+            }
+
         } elseif ($result) {
+
+            $response->status($application->response->getStatusCode(), $application->response->getReasonPhrase());
+
             $response->end($result);
+
         } else {
             $response->end();
         }
+
     }
 
     /**
@@ -73,7 +87,6 @@ class SwoolePhalconServer extends Server
      */
     protected function convertRequest(Request $request): void
     {
-
         foreach ($request->server as $key => $value) {
             $_SERVER[strtoupper($key)] = $value;
         }

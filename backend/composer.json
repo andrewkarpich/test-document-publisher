@@ -5,7 +5,11 @@
   "type": "project",
   "require": {
     "robmorgan/phinx": "^0.11.4",
-    "php-ds/php-ds": "^v1.2.0"
+    "php-ds/php-ds": "^v1.2.0",
+    "jan-swiecki/simple-annotations": "0.3.1",
+    "nesbot/carbon": "^2.16.1",
+    "league/fractal": "^0.13.0@dev",
+    "myclabs/php-enum": "dev-master"
   },
   "require-dev": {
     "roave/security-advisories": "dev-master",

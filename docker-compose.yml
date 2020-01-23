@@ -12,6 +12,8 @@ services:
   postgres:
       container_name: d_postgres
       image: postgres:11.2
+      ports:
+          - 5432:5432
       volumes:
           - postgresvolume:/var/lib/postgresql/data
       environment:

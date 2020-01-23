@@ -10,7 +10,11 @@ $documentCollection
     ->setHandler(DocumentController::class, true);
 
 $documentCollection
-    ->mapVia('/', 'indexAction', ['GET', 'POST']);
+    ->mapVia('/', 'createAction', ['POST'])
+    ->mapVia('/{id}', 'getAction', ['GET'])
+    ->mapVia('/', 'getListAction', ['GET'])
+    ->mapVia('/{id}', 'editAction', ['PATCH'])
+    ->mapVia('/{id}/publish', 'publishAction', ['POST']);
 
 
 return [
